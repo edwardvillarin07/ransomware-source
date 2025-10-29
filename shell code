@@ -1,0 +1,52 @@
+# Dummy Data Setup Script for Ransomware Simulation
+# FOR RESEARCH ONLY: Creates test files/subdirs in user folders.
+
+$user = $env:USERNAME  # Auto-detects current user
+$targets = @("Documents", "Desktop", "Downloads", "Pictures", "Videos", "Music")
+
+Write-Host "Starting dummy data setup for user: $user" -ForegroundColor Green
+
+foreach ($target in $targets) {
+    $path = "C:\Users\$user\$target"
+    
+    # Ensure target folder exists
+    if (!(Test-Path $path)) {
+        New-Item -Path $path -ItemType Directory -Force | Out-Null
+        Write-Host "Created: $path" -ForegroundColor Yellow
+    }
+    
+    # Create 3 subdirectories per target
+    for ($i = 1; $i -le 3; $i++) {
+        $subdir = "$path\Subdir$i"
+        New-Item -Path $subdir -ItemType Directory -Force | Out-Null
+        
+        # Create 10 dummy files per subdir (mix types: .txt, .jpg, .exe, .pdf for all-files test)
+        $extensions = @(".txt", ".jpg", ".exe", ".pdf", ".mp4")
+        for ($j = 1; $j -le 10; $j++) {
+            $ext = $extensions[($j - 1) % 5]  # Cycle through extensions
+            $file = "$subdir\test$j$ext"
+            $content = "Dummy content for file $j in $subdir (Target: $target). This is safe test data for ransomware simulation."
+            $content | Out-File -FilePath $file -Encoding utf8 -Force
+            
+            # Vary file sizes slightly (1-10KB for chunking test)
+            $bytes = [System.Text.Encoding]::UTF8.GetBytes($content * (1 + ($j % 10)))
+            [System.IO.File]::WriteAllBytes($file, $bytes)
+        }
+        Write-Host "Created $subdir with 10 files" -ForegroundColor Cyan
+    }
+}
+
+# Create a test file in a system-like path to verify exclusions (won't be encrypted)
+$sysTestPath = "C:\Windows\Temp\system_test.txt"
+"System-like file for exclusion test" | Out-File -FilePath $sysTestPath -Encoding utf8
+Write-Host "Created exclusion test file: $sysTestPath" -ForegroundColor Yellow
+
+# Optional: Create killswitch for safe abort
+$killswitchPath = "C:\killswitch.txt"
+New-Item -Path $killswitchPath -ItemType File -Force | Out-Null
+"This is the killswitch - remove to enable full encryption" | Out-File -FilePath $killswitchPath -Encoding utf8
+Write-Host "Created killswitch: $killswitchPath (Delete this file to test full run)" -ForegroundColor Red
+
+Write-Host "Setup complete! Total files created: ~180 across subdirs." -ForegroundColor Green
+Write-Host "Verify: Check Documents/Subdir1 for test1.txt, etc." -ForegroundColor Green
+Write-Host "Next: Snapshot VM, then run ransomware.exe as admin." -ForegroundColor Green
