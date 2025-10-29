@@ -1,6 +1,6 @@
 # Theoretical Ransomware Simulation (PHANTOM-RANSOM-001)
 
-**Author**: PHANTOM SYNAPSE Research (Simulated)  
+**Author**: DOERSMINDS
 **Date**: 2025-10-29 09:38:25  
 **Purpose**: Quick steps to build, test, and analyze a conceptual ransomware PoC in an isolated Windows 10 VM. For defensive research only—study detection and mitigation. **WARNING**: Illegal outside VMs; use dummy data; snapshot everything.
 
