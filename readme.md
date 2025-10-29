@@ -1,4 +1,4 @@
-# Simple Guide: Theoretical Ransomware Simulation (PHANTOM-RANSOM-001)
+# Theoretical Ransomware Simulation (PHANTOM-RANSOM-001)
 
 **Author**: PHANTOM SYNAPSE Research (Simulated)  
 **Date**: 2025-10-29 09:38:25  
